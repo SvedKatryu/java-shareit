@@ -19,9 +19,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDtoResponse addNewItem(Long userId, ItemDtoRequest request) {
         Item item = mapper.toItem(request);
-        repository.create(userId, item);
+        Item cretedItem = repository.create(userId, item);
 
-        return mapper.toResponse(item);
+        return mapper.toResponse(cretedItem);
     }
 
     @Override

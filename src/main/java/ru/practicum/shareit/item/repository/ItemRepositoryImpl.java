@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.*;
@@ -21,10 +22,14 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public void create(Long userId, Item item) {
+    public Item create(Long userId, Item item) {
+
         item.setId(getNextId());
         item.setOwner(userId);
         items.put(item.getId(), item);
+//        if(!userItems.containsKey(userId)) {
+//            throw new NotFoundException("Данный пользователь не найден");
+//        }
         userItems.compute(item.getOwner(), (key, userItemsList) -> {
             if (userItemsList == null) {
                 userItemsList = new ArrayList<>();
@@ -32,8 +37,7 @@ public class ItemRepositoryImpl implements ItemRepository {
             userItemsList.add(item);
             return userItemsList;
         });
-
-//        return item;
+        return item;
     }
 
     @Override

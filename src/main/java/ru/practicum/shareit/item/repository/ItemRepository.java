@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface ItemRepository {
-    void create(Long userId, Item item);
+    Item create(Long userId, Item item);
 
     Item getItemById(Long itemId);
 

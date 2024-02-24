@@ -2,6 +2,7 @@ package ru.practicum.shareit.user.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.controller.dto.UserDtoRequest;
 import ru.practicum.shareit.user.controller.dto.UserDtoResponse;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -25,9 +26,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user) {
-        repository.update(user);
-        return user;
+    public User update(Long id, User user) {
+        return repository.update(id, user);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        return repository.getUserById(id);
+        return repository.getUserById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 
     @Override

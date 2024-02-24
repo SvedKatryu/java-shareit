@@ -10,6 +10,7 @@ import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -23,9 +24,10 @@ public class UserController {
         return userService.create(request);
     }
 
-    @PutMapping
-    public User update(@Valid @RequestBody User updatedUser) {
-        return userService.update(updatedUser);
+    @PatchMapping("/{id}")
+    public User update(@PathVariable(value = "id") Long id,
+                       @Valid @RequestBody User updatedUser) {
+        return userService.update(id, updatedUser);
     }
 
     @GetMapping

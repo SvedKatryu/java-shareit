@@ -16,31 +16,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserServiceImpl service;
+    private final UserServiceImpl userService;
 
     @PostMapping
     public UserDtoResponse create(@Validated @RequestBody UserDtoRequest request) {
-        return service.create(request);
+        return userService.create(request);
     }
 
     @PutMapping
     public User update(@Valid @RequestBody User updatedUser) {
-        return service.update(updatedUser);
+        return userService.update(updatedUser);
     }
 
     @GetMapping
     public List<User> getAll() {
-        return service.getAll();
+        return userService.getAll();
     }
 
     @GetMapping("/{id}")
     public User getUserById(@PathVariable(value = "id") Long id) {
-        return service.getUserById(id);
+        return userService.getUserById(id);
     }
 
     @DeleteMapping("/{id}")
     public void deleteUserById(@PathVariable() Long id) {
-        service.delete(id);
+        userService.delete(id);
     }
 
 }

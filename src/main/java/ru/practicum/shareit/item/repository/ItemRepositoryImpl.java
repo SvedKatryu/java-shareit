@@ -11,9 +11,7 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class ItemRepositoryImpl implements ItemRepository {
-
     private long id = 0;
-
     private final Map<Long, List<Item>> userItems = new HashMap<>();
     private final Map<Long, Item> items = new HashMap<>();
 
@@ -23,19 +21,18 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item create(Long userId, Item item) {
-
         item.setId(getNextId());
         item.setOwner(userId);
         items.put(item.getId(), item);
-//        if(!userItems.containsKey(userId)) {
-//            throw new NotFoundException("Данный пользователь не найден");
-//        }
-        userItems.compute(item.getOwner(), (key, userItemsList) -> {
-            if (userItemsList == null) {
-                userItemsList = new ArrayList<>();
+        if (!userItems.containsKey(userId)) {
+            userItems.put(userId, null);
+        }
+        userItems.compute(userId, (key, userItems) -> {
+            if (userItems == null) {
+                userItems = new ArrayList<>();
             }
-            userItemsList.add(item);
-            return userItemsList;
+            userItems.add(item);
+            return userItems;
         });
         return item;
     }
@@ -45,7 +42,6 @@ public class ItemRepositoryImpl implements ItemRepository {
         return items.getOrDefault(itemId, null);
     }
 
-
     @Override
     public List<Item> getItemsByUserId(Long userId) {
         return userItems.getOrDefault(userId, Collections.emptyList());
@@ -53,7 +49,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item update(Long userId, Long itemId, Item item) {
-        Item curentItem = items.get(item.getId());
+        Item curentItem = items.get(itemId);
         if (Objects.equals(curentItem.getOwner(), userId)) {
             if (item.getName() != null) {
                 curentItem.setName(item.getName());
@@ -64,31 +60,26 @@ public class ItemRepositoryImpl implements ItemRepository {
             if (item.getAvailable() != null) {
                 curentItem.setAvailable(item.getAvailable());
             }
-
             items.put(curentItem.getId(), curentItem);
             userItems.computeIfPresent(item.getOwner(), (key, userItemsList) -> {
-                userItemsList.add(item);
+                userItemsList.add(curentItem);
                 return userItemsList;
             });
+            return curentItem;
+        } else {
+            throw new NotFoundException("Пользователь не является владельцем вещи");
         }
-        return curentItem;
     }
-
 
     @Override
     public List<Item> findItemsByText(String text) {
+        if (Objects.equals(text, "")) {
+            return Collections.emptyList();
+        }
         return items.values().stream()
-                .filter(i -> (i.getName().contains(text) || i.getDescription().contains(text)) && i.getAvailable().equals(true))
+                .filter(i -> (i.getName().toLowerCase().contains(text.toLowerCase())
+                        || i.getDescription().toLowerCase().contains(text.toLowerCase()))
+                        && i.getAvailable().equals(true))
                 .collect(Collectors.toList());
     }
-
-//    private long getId() {
-//        long lastId = items.values()
-//                .stream()
-//                .flatMap(Collection::stream)
-//                .mapToLong(Item::getId)
-//                .max()
-//                .orElse(0);
-//        return lastId + 1;
-//    }
 }

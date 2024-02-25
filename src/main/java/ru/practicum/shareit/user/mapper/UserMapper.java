@@ -7,7 +7,7 @@ import ru.practicum.shareit.user.model.User;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-   User toUser(UserDtoRequest request);
+    User toUser(UserDtoRequest request);
 
-   UserDtoResponse toResponse(User user);
+    UserDtoResponse toResponse(User user);
 }

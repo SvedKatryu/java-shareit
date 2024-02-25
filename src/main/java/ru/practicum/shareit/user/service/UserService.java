@@ -5,7 +5,6 @@ import ru.practicum.shareit.user.controller.dto.UserDtoResponse;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 
@@ -15,7 +14,7 @@ public interface UserService {
 
     List<User> getAll();
 
-   User getUserById(Long id);
+    User getUserById(Long id);
 
     void delete(Long id);
 }

@@ -2,8 +2,8 @@ package ru.practicum.shareit.user.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.exception.DuplicateKeyException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.*;
@@ -27,7 +27,7 @@ public class UserRepositoryImpl implements UserRepository {
                     .filter(u -> !Objects.equals(u.getId(), id))
                     .filter(u -> Objects.equals(u.getEmail(), user.getEmail())).findFirst();
             if (someUser.isPresent()) {
-                throw new ValidationException("Пользователь с таким Email уже существует");
+                throw new DuplicateKeyException("Пользователь с таким Email уже существует");
             }
             currentUser.setEmail(user.getEmail());
         }
@@ -41,7 +41,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     public void create(User user) {
         if (users.values().stream().anyMatch(u -> Objects.equals(u.getEmail(), user.getEmail()))) {
-            throw new ValidationException("Пользователь с таким Email уже существует");
+            throw new DuplicateKeyException("Пользователь с таким Email уже существует");
         } else {
             user.setId(getNextId());
             users.put(user.getId(), user);

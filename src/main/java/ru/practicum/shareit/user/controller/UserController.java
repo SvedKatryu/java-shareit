@@ -10,7 +10,6 @@ import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/users")

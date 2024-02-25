@@ -14,35 +14,35 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepositoryImpl repository;
+    private final UserRepositoryImpl userRepository;
     private final UserMapper mapper;
 
     @Override
     public UserDtoResponse create(UserDtoRequest request) {
         User user = mapper.toUser(request);
-        repository.create(user);
+        userRepository.create(user);
 
         return mapper.toResponse(user);
     }
 
     @Override
     public User update(Long id, User user) {
-        return repository.update(id, user);
+        return userRepository.update(id, user);
     }
 
     @Override
     public List<User> getAll() {
-        return repository.getAll();
+        return userRepository.getAll();
     }
 
     @Override
     public User getUserById(Long id) {
-        return repository.getUserById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        return userRepository.getUserById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 
     @Override
     public void delete(Long id) {
-        repository.delete(id);
+        userRepository.delete(id);
     }
 
 }

@@ -3,6 +3,8 @@ package ru.practicum.shareit.item.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.item.controller.dto.ItemDtoPatchRequest;
 import ru.practicum.shareit.item.controller.dto.ItemDtoRequest;
 import ru.practicum.shareit.item.controller.dto.ItemDtoResponse;
 import ru.practicum.shareit.item.model.Item;
@@ -20,6 +22,9 @@ public class ItemController {
     @PostMapping
     public ItemDtoResponse add(@RequestHeader("X-Sharer-User-Id") Long userId,
                                @Validated @RequestBody ItemDtoRequest request) {
+        if (userId == null) {
+            throw new ValidationException("Id пользователя не передан");
+        }
         return itemService.addNewItem(userId, request);
     }
 
@@ -35,15 +40,15 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public Item update(@RequestHeader("X-Sharer-User-Id") long userId,
-                       @Validated @PathVariable long itemId,
-                       @Validated @RequestBody ItemDtoRequest request) {
+    public ItemDtoResponse update(@RequestHeader("X-Sharer-User-Id") long userId,
+                                  @Validated @PathVariable long itemId,
+                                  @Validated @RequestBody ItemDtoPatchRequest request) {
         return itemService.update(userId, itemId, request);
     }
 
     @GetMapping("/search")
     public List<Item> findItemsByText(@RequestHeader("X-Sharer-User-Id") long userId,
-                           @RequestParam(name = "text") String text) {
+                                      @RequestParam(name = "text") String text) {
         return itemService.findItemsByText(text);
     }
 }

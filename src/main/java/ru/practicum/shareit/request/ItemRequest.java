@@ -1,14 +1,11 @@
 package ru.practicum.shareit.request;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDate;
 
-/**
- * TODO Sprint add-item-requests.
- */
 public class ItemRequest {
 
-    long id;
-    String description;
-    String requestor;
-    DateTimeFormat created;
+    private long id;
+    private String description;
+    private String request;
+    private LocalDate created;
 }

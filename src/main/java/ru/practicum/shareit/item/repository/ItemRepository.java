@@ -1,10 +1,7 @@
 package ru.practicum.shareit.item.repository;
 
-import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface ItemRepository {
@@ -16,6 +13,5 @@ public interface ItemRepository {
 
     Item update(Long userId, Long itemId, Item item);
 
-
-    List<Item> findItemsByText (String text);
+    List<Item> findItemsByText(String text);
 }

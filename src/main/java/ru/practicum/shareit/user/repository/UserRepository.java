@@ -1,9 +1,7 @@
 package ru.practicum.shareit.user.repository;
 
-import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

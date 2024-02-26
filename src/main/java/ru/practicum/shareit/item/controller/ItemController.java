@@ -3,34 +3,32 @@ package ru.practicum.shareit.item.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.controller.dto.ItemDtoPatchRequest;
 import ru.practicum.shareit.item.controller.dto.ItemDtoRequest;
 import ru.practicum.shareit.item.controller.dto.ItemDtoResponse;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
+@Validated
 public class ItemController {
 
     private final ItemServiceImpl itemService;
 
     @PostMapping
     public ItemDtoResponse add(@RequestHeader("X-Sharer-User-Id") Long userId,
-                               @Validated @RequestBody ItemDtoRequest request) {
-        if (userId == null) {
-            throw new ValidationException("Id пользователя не передан");
-        }
+                               @Valid @RequestBody ItemDtoRequest request) {
         return itemService.addNewItem(userId, request);
     }
 
     @GetMapping("/{itemId}")
     public Item getItemById(@RequestHeader("X-Sharer-User-Id") long userId,
-                            @PathVariable long itemId) {
+                            @Valid @PathVariable long itemId) {
         return itemService.getItemById(itemId);
     }
 
@@ -41,8 +39,8 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ItemDtoResponse update(@RequestHeader("X-Sharer-User-Id") long userId,
-                                  @Validated @PathVariable long itemId,
-                                  @Validated @RequestBody ItemDtoPatchRequest request) {
+                                  @Valid @PathVariable long itemId,
+                                  @Valid @RequestBody ItemDtoPatchRequest request) {
         return itemService.update(userId, itemId, request);
     }
 

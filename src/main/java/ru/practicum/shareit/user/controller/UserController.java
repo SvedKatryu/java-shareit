@@ -14,12 +14,13 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
+@Validated
 public class UserController {
 
     private final UserServiceImpl userService;
 
     @PostMapping
-    public UserDtoResponse create(@Validated @RequestBody UserDtoRequest request) {
+    public UserDtoResponse create(@Valid @RequestBody UserDtoRequest request) {
         return userService.create(request);
     }
 

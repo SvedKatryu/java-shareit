@@ -3,7 +3,6 @@ package ru.practicum.shareit.item.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.item.controller.dto.ItemDtoPatchRequest;
 import ru.practicum.shareit.item.controller.dto.ItemDtoRequest;
 import ru.practicum.shareit.item.controller.dto.ItemDtoResponse;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -42,8 +41,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDtoResponse update(Long userId, Long itemId, ItemDtoPatchRequest request) {
-        Item item = mapper.toItemFromPatch(request);
+    public ItemDtoResponse update(Long userId, Long itemId, ItemDtoRequest request) {
+        Item item = mapper.toItem(request);
         Item updatedItem = itemRepository.update(userId, itemId, item);
         return mapper.toResponse(updatedItem);
     }

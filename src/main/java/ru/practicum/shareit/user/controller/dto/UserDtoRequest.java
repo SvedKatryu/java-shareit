@@ -4,15 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @Getter
 @AllArgsConstructor
 public class UserDtoRequest {
     private final long id;
-    @NotNull
+    @NotBlank
     private final String name;
     @Email
-    @NotNull
+    @NotBlank
     private final String email;
 }

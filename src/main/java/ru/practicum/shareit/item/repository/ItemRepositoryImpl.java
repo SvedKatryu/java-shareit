@@ -24,16 +24,8 @@ public class ItemRepositoryImpl implements ItemRepository {
         item.setId(getNextId());
         item.setOwner(userId);
         items.put(item.getId(), item);
-        if (!userItems.containsKey(userId)) {
-            userItems.put(userId, null);
-        }
-        userItems.compute(userId, (key, userItems) -> {
-            if (userItems == null) {
-                userItems = new ArrayList<>();
-            }
-            userItems.add(item);
-            return userItems;
-        });
+
+        userItems.computeIfAbsent(userId, k -> new ArrayList<>()).add(item);
         return item;
     }
 

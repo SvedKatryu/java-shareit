@@ -15,6 +15,7 @@ public class UserRepositoryImpl implements UserRepository {
     private long id = 0;
 
     private final Map<Long, User> users = new HashMap<>();
+    private final Set<String> emailSet = new HashSet<>();
 
     private Long getNextId() {
         return ++id;
@@ -22,14 +23,13 @@ public class UserRepositoryImpl implements UserRepository {
 
     public User update(Long id, User user) {
         User currentUser = getUserById(id).orElseThrow(() -> new NotFoundException("Данный пользователь не найден"));
+        if (emailSet.contains(user.getEmail()) && !Objects.equals(currentUser.getEmail(), user.getEmail())) {
+            throw new ConflictException("Пользователь с таким Email уже существует");
+        }
         if (user.getEmail() != null) {
-            Optional<User> someUser = users.values().stream()
-                    .filter(u -> !Objects.equals(u.getId(), id))
-                    .filter(u -> Objects.equals(u.getEmail(), user.getEmail())).findFirst();
-            if (someUser.isPresent()) {
-                throw new ConflictException("Пользователь с таким Email уже существует");
-            }
+            emailSet.remove(currentUser.getEmail());
             currentUser.setEmail(user.getEmail());
+            emailSet.add(currentUser.getEmail());
         }
         if (user.getName() != null) {
             currentUser.setName(user.getName());
@@ -40,9 +40,10 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     public void create(User user) {
-        if (users.values().stream().anyMatch(u -> Objects.equals(u.getEmail(), user.getEmail()))) {
+        if (emailSet.contains(user.getEmail())) {
             throw new ConflictException("Пользователь с таким Email уже существует");
         } else {
+            emailSet.add(user.getEmail());
             user.setId(getNextId());
             users.put(user.getId(), user);
             log.info("Добавили нового пользователя", user);
@@ -55,9 +56,6 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     public Optional<User> getUserById(Long id) {
-        if (!users.containsKey(id)) {
-            throw new NotFoundException("Пользователь не найден");
-        }
         return Optional.ofNullable(users.get(id));
     }
 
@@ -65,6 +63,7 @@ public class UserRepositoryImpl implements UserRepository {
         if (!users.containsKey(id)) {
             throw new NotFoundException("Пользователь не найден");
         }
+        emailSet.remove(users.get(id).getEmail());
         users.remove(id);
         log.info("Пользователь удален");
     }

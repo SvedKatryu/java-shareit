@@ -26,8 +26,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(Long id, User user) {
-        return userRepository.update(id, user);
+    public UserDtoResponse update(Long id, User user) {
+        User updatedUser = userRepository.update(id, user);
+        return mapper.toResponse(updatedUser);
     }
 
     @Override
@@ -36,8 +37,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userRepository.getUserById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+    public UserDtoResponse getUserById(Long id) {
+        User user = userRepository.getUserById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        return mapper.toResponse(user);
     }
 
     @Override

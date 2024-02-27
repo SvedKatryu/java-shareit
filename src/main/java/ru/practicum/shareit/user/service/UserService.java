@@ -10,11 +10,11 @@ public interface UserService {
 
     UserDtoResponse create(UserDtoRequest request);
 
-    User update(Long id, User user);
+    UserDtoResponse update(Long id, User user);
 
     List<User> getAll();
 
-    User getUserById(Long id);
+    UserDtoResponse getUserById(Long id);
 
     void delete(Long id);
 }

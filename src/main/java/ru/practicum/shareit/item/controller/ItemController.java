@@ -22,7 +22,7 @@ public class ItemController {
     @PostMapping
     @Validated({Marker.OnCreate.class})
     public ItemDtoResponse add(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                @RequestBody @Valid ItemDtoRequest request) {
+                               @RequestBody @Valid ItemDtoRequest request) {
         return itemService.addNewItem(userId, request);
     }
 

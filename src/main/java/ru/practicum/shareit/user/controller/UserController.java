@@ -25,8 +25,8 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public User update(@PathVariable(value = "id") Long id,
-                       @Valid @RequestBody User updatedUser) {
+    public UserDtoResponse update(@PathVariable(value = "id") Long id,
+                                  @Valid @RequestBody User updatedUser) {
         return userService.update(id, updatedUser);
     }
 
@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable(value = "id") Long id) {
+    public UserDtoResponse getUserById(@PathVariable(value = "id") Long id) {
         return userService.getUserById(id);
     }
 

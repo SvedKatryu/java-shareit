@@ -9,7 +9,10 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/items")
@@ -20,15 +23,14 @@ public class ItemController {
     private final ItemServiceImpl itemService;
 
     @PostMapping
-    @Validated({Marker.OnCreate.class})
     public ItemDtoResponse add(@RequestHeader("X-Sharer-User-Id") Long userId,
-                               @RequestBody @Valid ItemDtoRequest request) {
+                               @RequestBody @Validated({Marker.OnCreate.class}) ItemDtoRequest request) {
         return itemService.addNewItem(userId, request);
     }
 
     @GetMapping("/{itemId}")
-    public Item getItemById(@RequestHeader("X-Sharer-User-Id") long userId,
-                            @Valid @PathVariable long itemId) {
+    public ItemDtoResponse getItemById(@RequestHeader("X-Sharer-User-Id") long userId,
+                                       @Valid @PathVariable long itemId) {
         return itemService.getItemById(itemId);
     }
 
@@ -38,16 +40,18 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    @Validated({Marker.OnUpdate.class})
     public ItemDtoResponse update(@RequestHeader("X-Sharer-User-Id") long userId,
-                                  @Valid @PathVariable long itemId,
-                                  @RequestBody @Valid ItemDtoRequest request) {
+                                  @Positive @PathVariable long itemId,
+                                  @RequestBody @Validated({Marker.OnUpdate.class}) ItemDtoRequest request) {
         return itemService.update(userId, itemId, request);
     }
 
     @GetMapping("/search")
     public List<Item> findItemsByText(@RequestHeader("X-Sharer-User-Id") long userId,
                                       @RequestParam(name = "text") String text) {
+        if (Objects.equals(text, "")) {
+            return Collections.emptyList();
+        }
         return itemService.findItemsByText(text);
     }
 }

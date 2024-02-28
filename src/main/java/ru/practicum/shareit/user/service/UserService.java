@@ -10,7 +10,7 @@ public interface UserService {
 
     UserDtoResponse create(UserDtoRequest request);
 
-    UserDtoResponse update(Long id, User user);
+    UserDtoResponse update(Long id, UserDtoRequest user);
 
     List<User> getAll();
 

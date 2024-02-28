@@ -7,14 +7,14 @@ import ru.practicum.shareit.user.controller.dto.UserDtoRequest;
 import ru.practicum.shareit.user.controller.dto.UserDtoResponse;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.UserRepositoryImpl;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepositoryImpl userRepository;
+    private final UserRepository userRepository;
     private final UserMapper mapper;
 
     @Override
@@ -26,8 +26,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDtoResponse update(Long id, User user) {
-        User updatedUser = userRepository.update(id, user);
+    public UserDtoResponse update(Long id, UserDtoRequest user) {
+        User userForUpdate = mapper.toUser(user);
+        User updatedUser = userRepository.update(id, userForUpdate);
         return mapper.toResponse(updatedUser);
     }
 

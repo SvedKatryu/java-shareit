@@ -7,18 +7,18 @@ import ru.practicum.shareit.item.controller.dto.ItemDtoRequest;
 import ru.practicum.shareit.item.controller.dto.ItemDtoResponse;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.repository.ItemRepositoryImpl;
+import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.UserRepositoryImpl;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
-    private final ItemRepositoryImpl itemRepository;
+    private final ItemRepository itemRepository;
     private final ItemMapper mapper;
-    private final UserRepositoryImpl userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public ItemDtoResponse addNewItem(Long userId, ItemDtoRequest request) {
@@ -31,8 +31,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item getItemById(Long itemId) {
-        return itemRepository.getItemById(itemId);
+    public ItemDtoResponse getItemById(Long itemId) {
+        Item item = itemRepository.getItemById(itemId);
+        return mapper.toResponse(item);
     }
 
     @Override

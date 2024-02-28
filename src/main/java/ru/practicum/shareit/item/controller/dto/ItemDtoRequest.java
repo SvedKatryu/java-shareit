@@ -12,7 +12,7 @@ import javax.validation.constraints.Null;
 @AllArgsConstructor
 public class ItemDtoRequest {
     @Null(groups = Marker.OnCreate.class)
-    private final String id;
+    private final Long id;
     @NotBlank(groups = Marker.OnCreate.class)
     private final String name;
     @NotBlank(groups = Marker.OnCreate.class)

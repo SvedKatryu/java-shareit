@@ -26,6 +26,7 @@ public class ItemRepositoryImpl implements ItemRepository {
         items.put(item.getId(), item);
 
         userItems.computeIfAbsent(userId, k -> new ArrayList<>()).add(item);
+        log.info("Добавили новую вещь", item);
         return item;
     }
 
@@ -42,7 +43,9 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public Item update(Long userId, Long itemId, Item item) {
         Item curentItem = items.get(itemId);
-        if (Objects.equals(curentItem.getOwner(), userId)) {
+        if (!Objects.equals(curentItem.getOwner(), userId)) {
+            throw new NotFoundException("Пользователь не является владельцем вещи");
+        }
             if (item.getName() != null) {
                 curentItem.setName(item.getName());
             }
@@ -57,17 +60,13 @@ public class ItemRepositoryImpl implements ItemRepository {
                 userItemsList.add(curentItem);
                 return userItemsList;
             });
+            log.info("Данные изменены");
             return curentItem;
-        } else {
-            throw new NotFoundException("Пользователь не является владельцем вещи");
-        }
     }
 
     @Override
     public List<Item> findItemsByText(String text) {
-        if (Objects.equals(text, "")) {
-            return Collections.emptyList();
-        }
+        log.info("Найдено по запросу");
         return items.values().stream()
                 .filter(i -> (i.getName().toLowerCase().contains(text.toLowerCase())
                         || i.getDescription().toLowerCase().contains(text.toLowerCase()))

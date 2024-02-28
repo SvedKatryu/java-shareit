@@ -12,7 +12,7 @@ public interface ItemService {
 
     ItemDtoResponse update(Long userId, Long itemId, ItemDtoRequest request);
 
-    Item getItemById(Long itemId);
+    ItemDtoResponse getItemById(Long itemId);
 
     List<Item> getItemsByUserId(Long userId);
 

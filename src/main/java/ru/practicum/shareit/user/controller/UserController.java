@@ -3,7 +3,7 @@ package ru.practicum.shareit.user.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.controller.Marker;
+import ru.practicum.shareit.markers.Marker;
 import ru.practicum.shareit.user.controller.dto.UserDtoRequest;
 import ru.practicum.shareit.user.controller.dto.UserDtoResponse;
 import ru.practicum.shareit.user.model.User;
@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAll() {
+    public List<UserDtoResponse> getAll() {
         return userService.getAll();
     }
 

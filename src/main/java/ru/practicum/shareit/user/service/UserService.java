@@ -12,7 +12,7 @@ public interface UserService {
 
     UserDtoResponse update(Long id, UserDtoRequest user);
 
-    List<User> getAll();
+    List<UserDtoResponse> getAll();
 
     UserDtoResponse getUserById(Long id);
 

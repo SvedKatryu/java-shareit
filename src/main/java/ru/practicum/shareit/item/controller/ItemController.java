@@ -7,6 +7,7 @@ import ru.practicum.shareit.item.controller.dto.ItemDtoRequest;
 import ru.practicum.shareit.item.controller.dto.ItemDtoResponse;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
+import ru.practicum.shareit.markers.Marker;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -35,7 +36,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<Item> get(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public List<ItemDtoResponse> get(@RequestHeader("X-Sharer-User-Id") long userId) {
         return itemService.getItemsByUserId(userId);
     }
 
@@ -47,7 +48,7 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<Item> findItemsByText(@RequestHeader("X-Sharer-User-Id") long userId,
+    public List<ItemDtoResponse> findItemsByText(@RequestHeader("X-Sharer-User-Id") long userId,
                                       @RequestParam(name = "text") String text) {
         if (Objects.equals(text, "")) {
             return Collections.emptyList();

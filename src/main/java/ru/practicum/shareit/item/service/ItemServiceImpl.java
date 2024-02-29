@@ -12,6 +12,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -37,8 +38,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getItemsByUserId(Long userId) {
-        return itemRepository.getItemsByUserId(userId);
+    public List<ItemDtoResponse> getItemsByUserId(Long userId) {
+        List<Item> items = itemRepository.getItemsByUserId(userId);
+        return items.stream().map(mapper::toResponse).collect(Collectors.toList());
     }
 
     @Override
@@ -49,8 +51,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> findItemsByText(String text) {
-        return itemRepository.findItemsByText(text);
+    public List<ItemDtoResponse> findItemsByText(String text) {
+        List<Item> items = itemRepository.findItemsByText(text);
+        return items.stream().map(mapper::toResponse).collect(Collectors.toList());
     }
 
 }

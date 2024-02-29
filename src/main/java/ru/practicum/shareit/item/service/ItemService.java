@@ -14,7 +14,7 @@ public interface ItemService {
 
     ItemDtoResponse getItemById(Long itemId);
 
-    List<Item> getItemsByUserId(Long userId);
+    List<ItemDtoResponse> getItemsByUserId(Long userId);
 
-    List<Item> findItemsByText(String text);
+    List<ItemDtoResponse> findItemsByText(String text);
 }

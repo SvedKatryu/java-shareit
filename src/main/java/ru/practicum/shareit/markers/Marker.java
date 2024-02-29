@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.controller.dto;
+package ru.practicum.shareit.markers;
 
 public interface Marker {
     interface OnCreate {

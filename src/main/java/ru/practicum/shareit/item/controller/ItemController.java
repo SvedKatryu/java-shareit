@@ -5,7 +5,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.controller.dto.ItemDtoRequest;
 import ru.practicum.shareit.item.controller.dto.ItemDtoResponse;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
 import ru.practicum.shareit.markers.Marker;
 
@@ -49,7 +48,7 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemDtoResponse> findItemsByText(@RequestHeader("X-Sharer-User-Id") long userId,
-                                      @RequestParam(name = "text") String text) {
+                                                 @RequestParam(name = "text") String text) {
         if (Objects.equals(text, "")) {
             return Collections.emptyList();
         }

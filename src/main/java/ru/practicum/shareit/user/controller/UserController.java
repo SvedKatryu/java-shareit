@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.markers.Marker;
 import ru.practicum.shareit.user.controller.dto.UserDtoRequest;
 import ru.practicum.shareit.user.controller.dto.UserDtoResponse;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import java.util.List;

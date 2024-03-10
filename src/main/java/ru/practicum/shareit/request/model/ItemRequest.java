@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Data
 @Entity
@@ -20,5 +19,4 @@ public class ItemRequest {
     private String description;
     @Column(name = "requestor_id")
     private String request;
-    private LocalDate created;
 }

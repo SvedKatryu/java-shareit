@@ -9,7 +9,6 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.State;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.repository.JpaBookingRepository;
-import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
@@ -34,7 +33,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDtoResponse add(Long userId, BookingDtoRequest bookingDtoRequest) {
         if (bookingDtoRequest.getStart().isAfter(bookingDtoRequest.getEnd()) ||
                 bookingDtoRequest.getStart().equals((bookingDtoRequest.getEnd()))) {
-            throw new BadRequestException(String.format("Время начала = %s или конца = %s бронирования неверное",
+            throw new ValidationException(String.format("Время начала = %s или конца = %s бронирования неверное",
                     bookingDtoRequest.getStart(), bookingDtoRequest.getEnd()));
         }
         Item item = itemRepository.findById(bookingDtoRequest.getItemId()).orElseThrow(() -> new NotFoundException("Вещь не найдена"));
@@ -55,7 +54,7 @@ public class BookingServiceImpl implements BookingService {
         if (!userId.equals(booking.getItem().getOwner().getId()))
             throw new NotFoundException("Изменить статус может только владелец!");
         if (booking.getStatus().equals(Status.APPROVED))
-            throw new BadRequestException("Статус бронирования уже 'APPROVED'");
+            throw new ValidationException("Статус бронирования уже 'APPROVED'");
         booking.setStatus(approve ? Status.APPROVED : Status.REJECTED);
         return bookingMapper.toBookingDtoResponse(bookingRepository.save(booking));
     }
@@ -71,57 +70,57 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public List<BookingDtoResponse> getAllByBooker(Long booker, State bookingState) {
-        userIsPresent(booker);
+    public List<BookingDtoResponse> getAllByBooker(Long bookerId, State state) {
+        userIsPresent(bookerId);
         LocalDateTime now = LocalDateTime.now();
-        switch (bookingState) {
+        switch (state) {
             case ALL:
-                return bookingMapper.toBookingDtoResponse(bookingRepository.findAllByBookerIdOrderByStartDesc(booker));
+                return bookingMapper.toBookingDtoResponse(bookingRepository.findAllByBookerIdOrderByStartDesc(bookerId));
             case PAST:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByBookerIdAndEndIsBeforeOrderByStartDesc(booker, now));
+                        .findAllByBookerIdAndEndIsBeforeOrderByStartDesc(bookerId, now));
             case FUTURE:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByBookerIdAndStartIsAfterOrderByStartDesc(booker, now));
+                        .findAllByBookerIdAndStartIsAfterOrderByStartDesc(bookerId, now));
             case CURRENT:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(booker, now, now));
+                        .findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(bookerId, now, now));
             case WAITING:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByBookerIdAndStatusIsOrderByStartDesc(booker, Status.WAITING));
+                        .findAllByBookerIdAndStatusIsOrderByStartDesc(bookerId, Status.WAITING));
             case REJECTED:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByBookerIdAndStatusIsOrderByStartDesc(booker, Status.REJECTED));
+                        .findAllByBookerIdAndStatusIsOrderByStartDesc(bookerId, Status.REJECTED));
             default:
-                throw new ValidationException("Неверно указан статус");
+                throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
         }
     }
 
     @Override
     @Transactional
-    public List<BookingDtoResponse> getAllByOwner(Long owner, State bookingState) {
-        userIsPresent(owner);
+    public List<BookingDtoResponse> getAllByOwner(Long ownerId, State state) {
+        userIsPresent(ownerId);
         LocalDateTime now = LocalDateTime.now();
-        switch (bookingState) {
+        switch (state) {
             case ALL:
-                return bookingMapper.toBookingDtoResponse(bookingRepository.findAllByItemOwnerIdOrderByStartDesc(owner));
+                return bookingMapper.toBookingDtoResponse(bookingRepository.findAllByItemOwnerIdOrderByStartDesc(ownerId));
             case PAST:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByItemOwnerIdAndEndIsBeforeOrderByStartDesc(owner, now));
+                        .findAllByItemOwnerIdAndEndIsBeforeOrderByStartDesc(ownerId, now));
             case FUTURE:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByItemOwnerIdAndStartIsAfterOrderByStartDesc(owner, now));
+                        .findAllByItemOwnerIdAndStartIsAfterOrderByStartDesc(ownerId, now));
             case CURRENT:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByItemOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(owner, now, now));
+                        .findAllByItemOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(ownerId, now, now));
             case WAITING:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByItemOwnerIdAndStatusIsOrderByStartDesc(owner, Status.WAITING));
+                        .findAllByItemOwnerIdAndStatusIsOrderByStartDesc(ownerId, Status.WAITING));
             case REJECTED:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByItemOwnerIdAndStatusIsOrderByStartDesc(owner, Status.REJECTED));
+                        .findAllByItemOwnerIdAndStatusIsOrderByStartDesc(ownerId, Status.REJECTED));
             default:
-                throw new ValidationException("Неверно указан статус");
+                throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
         }
     }
 

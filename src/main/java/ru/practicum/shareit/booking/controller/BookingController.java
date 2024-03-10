@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping(path = "/bookings")
 public class BookingController {
-    //public static final String USER_ID = "X-Sharer-User-Id";
     private final BookingServiceImpl bookingService;
 
     @PostMapping
@@ -30,7 +29,7 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingDtoResponse approve(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable @Positive long bookingId,
-                              @RequestParam(name = "approved") boolean approved) {
+                                      @RequestParam(name = "approved") boolean approved) {
         log.info("Получен запрос на смену статуса бронирования {} вещи ", bookingId);
         return bookingService.approve(userId, bookingId, approved);
     }
@@ -51,8 +50,8 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingDtoResponse> getAllByOwner(@RequestHeader("X-Sharer-User-Id") long ownerId,
-                                          @RequestParam(name = "state", defaultValue = "ALL")
-                                          State state) {
+                                                  @RequestParam(name = "state", defaultValue = "ALL")
+                                                  State state) {
         log.info("Получен запрос на получение списка бронирований всех вещей пользователя ID{}", ownerId);
         return bookingService.getAllByOwner(ownerId, state);
     }

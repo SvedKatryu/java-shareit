@@ -86,7 +86,7 @@ public class ItemServiceImpl implements ItemService {
         responseItem.setLastBooking(findLastBooking(bookings));
         responseItem.setNextBooking(findNextBooking(bookings));
 
-        return mapper.toResponse(item);
+        return responseItem;
     }
 
     @Override

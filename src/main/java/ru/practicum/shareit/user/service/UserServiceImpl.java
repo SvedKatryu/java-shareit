@@ -30,8 +30,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDtoResponse update(Long id, UserDtoRequest user) {
-        User userForUpdate = mapper.toUser(user);
+    public UserDtoResponse update(Long id, UserDtoRequest requestUser) {
+        User userForUpdate = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        if (requestUser.getName() != null) userForUpdate.setName(requestUser.getName());
+        if (requestUser.getEmail() != null) userForUpdate.setEmail(requestUser.getEmail());
         User updatedUser = userRepository.save(userForUpdate);
         return mapper.toResponse(updatedUser);
     }

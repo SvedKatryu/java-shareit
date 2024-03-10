@@ -60,14 +60,14 @@ public class ItemServiceImpl implements ItemService {
         }
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
-        if (requestItem.getName() != null && !requestItem.getName().equals(item.getName())) {
-            item.setName(item.getName());
+        if (requestItem.getName() != null) {
+            item.setName(requestItem.getName());
         }
-        if (item.getDescription() != null && !requestItem.getDescription().equals(item.getDescription())) {
-            item.setDescription(item.getDescription());
+        if (requestItem.getDescription() != null) {
+            item.setDescription(requestItem.getDescription());
         }
-        if (item.getAvailable() != null && !requestItem.getAvailable().equals(item.getAvailable())) {
-            item.setAvailable(item.getAvailable());
+        if (requestItem.getAvailable() != null) {
+            item.setAvailable(requestItem.getAvailable());
         }
 
         Item updatedItem = itemRepository.save(item);

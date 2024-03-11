@@ -1,6 +1,6 @@
 package ru.practicum.shareit.booking.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDtoRequest;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
     private final JpaBookingRepository bookingRepository;
     private final JpaUserRepository userRepository;
@@ -37,11 +37,16 @@ public class BookingServiceImpl implements BookingService {
                     bookingDtoRequest.getStart(), bookingDtoRequest.getEnd()));
         }
         Item item = itemRepository.findById(bookingDtoRequest.getItemId()).orElseThrow(() -> new NotFoundException("Вещь не найдена"));
-
-        if (!item.getAvailable()) throw new ValidationException("Вещь не доступна для бронирования.");
+        List<Booking> bookings = bookingRepository
+                .findByItemIdInAndStatusNot(List.of(bookingDtoRequest.getItemId()), Status.REJECTED);
+        boolean isConflict = bookings.stream().anyMatch(b ->
+                (bookingDtoRequest.getStart().isAfter(b.getStart()) && bookingDtoRequest.getStart().isBefore(b.getEnd()))
+                        || (bookingDtoRequest.getEnd().isAfter(b.getStart()) && bookingDtoRequest.getEnd().isBefore(b.getEnd()))
+        );
+        if (!item.getAvailable() || isConflict) throw new ValidationException("Вещь не доступна для бронирования.");
         if (userId.equals(item.getOwner().getId()))
             throw new NotFoundException("Владелец не может забронировать свою вещь.");
-        User booker = userIsPresent(userId);
+        User booker = getUserIfPresent(userId);
         Booking booking = bookingMapper.toBooking(bookingDtoRequest, item, booker, Status.WAITING);
         bookingRepository.save(booking);
         return bookingMapper.toBookingDtoResponse(bookingRepository.save(booking));
@@ -50,11 +55,13 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingDtoResponse approve(Long userId, Long bookingId, boolean approve) {
-        Booking booking = bookingIsPresent(bookingId);
-        if (!userId.equals(booking.getItem().getOwner().getId()))
+        Booking booking = getBookingIfPresent(bookingId);
+        if (!userId.equals(booking.getItem().getOwner().getId())) {
             throw new NotFoundException("Изменить статус может только владелец!");
-        if (booking.getStatus().equals(Status.APPROVED))
+        }
+        if (booking.getStatus().equals(Status.APPROVED)) {
             throw new ValidationException("Статус бронирования уже 'APPROVED'");
+        }
         booking.setStatus(approve ? Status.APPROVED : Status.REJECTED);
         return bookingMapper.toBookingDtoResponse(bookingRepository.save(booking));
     }
@@ -62,7 +69,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingDtoResponse get(Long userId, Long bookingId) {
-        Booking booking = bookingIsPresent(bookingId);
+        Booking booking = getBookingIfPresent(bookingId);
         if (!userId.equals(booking.getBooker().getId()) && !userId.equals(booking.getItem().getOwner().getId()))
             throw new NotFoundException("Доступ к бронированию имеет только владелец или автор бронирования!");
         return bookingMapper.toBookingDtoResponse(booking);
@@ -71,7 +78,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public List<BookingDtoResponse> getAllByBooker(Long bookerId, State state) {
-        userIsPresent(bookerId);
+        getUserIfPresent(bookerId);
         LocalDateTime now = LocalDateTime.now();
         switch (state) {
             case ALL:
@@ -99,7 +106,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public List<BookingDtoResponse> getAllByOwner(Long ownerId, State state) {
-        userIsPresent(ownerId);
+        getUserIfPresent(ownerId);
         LocalDateTime now = LocalDateTime.now();
         switch (state) {
             case ALL:
@@ -124,11 +131,11 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private User userIsPresent(Long userId) {
+    private User getUserIfPresent(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 
-    private Booking bookingIsPresent(Long bookingId) {
+    private Booking getBookingIfPresent(Long bookingId) {
         return bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("Бронь не найдена"));
     }
 }

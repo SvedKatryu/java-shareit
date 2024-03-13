@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDtoForItem;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -21,7 +22,6 @@ import ru.practicum.shareit.item.repository.JpaItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.JpaUserRepository;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
+
     private final JpaItemRepository itemRepository;
     private final ItemMapper mapper;
     private final BookingMapper bookingMapper;
@@ -41,7 +42,7 @@ public class ItemServiceImpl implements ItemService {
     private final JpaCommentRepository commentRepository;
 
     @Override
-    @Transactional
+    @Transactional()
     public ItemDtoResponse addNewItem(Long userId, ItemDtoRequest request) {
         Item item = mapper.toItem(request);
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
@@ -75,7 +76,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ItemDtoResponse getItemById(Long userId, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Вещь не найдена"));
         ItemDtoResponse responseItem = mapper.toResponse(item);
@@ -90,7 +91,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ItemDtoResponse> getItemsByUserId(Long userId) {
         List<ItemDtoResponse> items = itemRepository.findAllByOwnerId(userId).stream()
                 .map(mapper::toResponse)
@@ -111,7 +112,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ItemDtoResponse> findItemsByText(String text) {
         List<Item> items = itemRepository.findByNameOrDescriptionContainingIgnoreCaseAndAvailableIsTrue(text, text);
         return items.stream().map(mapper::toResponse).collect(Collectors.toList());
@@ -123,8 +124,8 @@ public class ItemServiceImpl implements ItemService {
         Booking booking = bookingRepository.findFirstByItemIdAndBookerIdOrderByStart(itemId, bookerId)
                 .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID%d не бронировал вещь с ID%d ",
                         bookerId, itemId)));
-        if (booking.getStart().isAfter(LocalDateTime.now())) {
-            throw new ValidationException("Пользователь может оставлять отзыв только после начала броинрования!");
+        if (booking.getEnd().isAfter(LocalDateTime.now())) {
+            throw new ValidationException("Пользователь может оставлять отзыв только после окончания срока аренды!");
         }
         Comment comment = commentMapper.toComment(commentDto);
         comment.setItem(booking.getItem());

@@ -42,6 +42,8 @@ public class BookingServiceImpl implements BookingService {
         boolean isConflict = bookings.stream().anyMatch(b ->
                 (bookingDtoRequest.getStart().isAfter(b.getStart()) && bookingDtoRequest.getStart().isBefore(b.getEnd()))
                         || (bookingDtoRequest.getEnd().isAfter(b.getStart()) && bookingDtoRequest.getEnd().isBefore(b.getEnd()))
+                        || (bookingDtoRequest.getStart().isBefore(b.getStart()) || bookingDtoRequest.getStart().equals(b.getStart()))
+                        && (bookingDtoRequest.getEnd().isAfter(b.getEnd()) || bookingDtoRequest.getEnd().equals(b.getEnd()))
         );
         if (!item.getAvailable() || isConflict) throw new ValidationException("Вещь не доступна для бронирования.");
         if (userId.equals(item.getOwner().getId()))

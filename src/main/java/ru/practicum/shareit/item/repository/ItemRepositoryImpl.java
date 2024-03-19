@@ -22,7 +22,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public Item create(Long userId, Item item) {
         item.setId(getNextId());
-        item.setOwner(userId);
+//        item.setOwner(userId);
         items.put(item.getId(), item);
 
         userItems.computeIfAbsent(userId, k -> new ArrayList<>()).add(item);
@@ -43,25 +43,25 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public Item update(Long userId, Long itemId, Item item) {
         Item curentItem = items.get(itemId);
-        if (!Objects.equals(curentItem.getOwner(), userId)) {
+        if (!Objects.equals(curentItem.getOwner().getId(), userId)) {
             throw new NotFoundException("Пользователь не является владельцем вещи");
         }
-            if (item.getName() != null) {
-                curentItem.setName(item.getName());
-            }
-            if (item.getDescription() != null) {
-                curentItem.setDescription(item.getDescription());
-            }
-            if (item.getAvailable() != null) {
-                curentItem.setAvailable(item.getAvailable());
-            }
-            items.put(curentItem.getId(), curentItem);
-            userItems.computeIfPresent(item.getOwner(), (key, userItemsList) -> {
-                userItemsList.add(curentItem);
-                return userItemsList;
-            });
-            log.info("Данные изменены");
-            return curentItem;
+        if (item.getName() != null) {
+            curentItem.setName(item.getName());
+        }
+        if (item.getDescription() != null) {
+            curentItem.setDescription(item.getDescription());
+        }
+        if (item.getAvailable() != null) {
+            curentItem.setAvailable(item.getAvailable());
+        }
+        items.put(curentItem.getId(), curentItem);
+        userItems.computeIfPresent(item.getOwner().getId(), (key, userItemsList) -> {
+            userItemsList.add(curentItem);
+            return userItemsList;
+        });
+        log.info("Данные изменены");
+        return curentItem;
     }
 
     @Override

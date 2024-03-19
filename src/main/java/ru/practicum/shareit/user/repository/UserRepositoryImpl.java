@@ -35,7 +35,6 @@ public class UserRepositoryImpl implements UserRepository {
             currentUser.setName(user.getName());
         }
         users.put(id, currentUser);
-        log.info("Данные пользователя изменены");
         return currentUser;
     }
 
@@ -46,12 +45,10 @@ public class UserRepositoryImpl implements UserRepository {
             emailSet.add(user.getEmail());
             user.setId(getNextId());
             users.put(user.getId(), user);
-            log.info("Добавили нового пользователя", user);
         }
     }
 
     public List<User> getAll() {
-        log.info("Добавили всех пользователей");
         return new ArrayList<>(users.values());
     }
 
@@ -65,6 +62,5 @@ public class UserRepositoryImpl implements UserRepository {
         }
         emailSet.remove(users.get(id).getEmail());
         users.remove(id);
-        log.info("Пользователь удален");
     }
 }

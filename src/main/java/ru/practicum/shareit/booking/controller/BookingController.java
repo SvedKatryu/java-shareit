@@ -11,6 +11,7 @@ import ru.practicum.shareit.booking.service.BookingServiceImpl;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Slf4j
@@ -20,6 +21,8 @@ import java.util.List;
 @RequestMapping(path = "/bookings")
 public class BookingController {
     private final BookingServiceImpl bookingService;
+
+    private static final String DEFAULT_PAGE_SIZE = "10";
 
     @PostMapping
     public BookingDtoResponse add(@RequestHeader("X-Sharer-User-Id") long userId, @Valid @RequestBody BookingDtoRequest bookingDtoRequest) {
@@ -42,17 +45,19 @@ public class BookingController {
 
     @GetMapping
     public List<BookingDtoResponse> getAllByBooker(@RequestHeader("X-Sharer-User-Id") long bookerId,
-                                                   @RequestParam(name = "state", defaultValue = "ALL")
-                                                   State state) {
+                                                   @RequestParam(name = "state", defaultValue = "ALL") State state,
+                                                   @RequestParam(defaultValue = "0") @PositiveOrZero Long from,
+                                                   @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) @Positive Integer size) {
         log.info("Получен запрос на получение всех бронирований пользователя ID{}", bookerId);
-        return bookingService.getAllByBooker(bookerId, state);
+        return bookingService.getAllByBooker(bookerId, state, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingDtoResponse> getAllByOwner(@RequestHeader("X-Sharer-User-Id") long ownerId,
-                                                  @RequestParam(name = "state", defaultValue = "ALL")
-                                                  State state) {
+                                                  @RequestParam(name = "state", defaultValue = "ALL") State state,
+                                                  @RequestParam(defaultValue = "0") @PositiveOrZero Long from,
+                                                  @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) @Positive Integer size) {
         log.info("Получен запрос на получение списка бронирований всех вещей пользователя ID{}", ownerId);
-        return bookingService.getAllByOwner(ownerId, state);
+        return bookingService.getAllByOwner(ownerId, state, from, size);
     }
 }

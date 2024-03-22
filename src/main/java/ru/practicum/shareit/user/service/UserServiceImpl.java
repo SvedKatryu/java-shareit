@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDtoResponse update(Long id, UserDtoRequest requestUser) {
-        User userForUpdate = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        User userForUpdate = userRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID%d не найден", id)));
         if (requestUser.getName() != null) userForUpdate.setName(requestUser.getName());
         if (requestUser.getEmail() != null) userForUpdate.setEmail(requestUser.getEmail());
         User updatedUser = userRepository.save(userForUpdate);
@@ -48,14 +48,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserDtoResponse getUserById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID%d не найден", id)));
         return mapper.toResponse(user);
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID%d не найден", id)));
         userRepository.delete(user);
     }
 

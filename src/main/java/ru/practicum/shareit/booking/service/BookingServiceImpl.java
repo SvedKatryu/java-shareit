@@ -14,6 +14,7 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.JpaItemRepository;
+import ru.practicum.shareit.pageable.OffsetPageRequest;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.JpaUserRepository;
 
@@ -79,27 +80,28 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookingDtoResponse> getAllByBooker(Long bookerId, State state) {
+    public List<BookingDtoResponse> getAllByBooker(Long bookerId, State state, Long from, Integer size) {
         getUserIfPresent(bookerId);
         LocalDateTime now = LocalDateTime.now();
+        OffsetPageRequest pageRequest = OffsetPageRequest.of(from, size);
         switch (state) {
             case ALL:
-                return bookingMapper.toBookingDtoResponse(bookingRepository.findAllByBookerIdOrderByStartDesc(bookerId));
+                return bookingMapper.toBookingDtoResponse(bookingRepository.findAllByBookerIdOrderByStartDesc(bookerId, pageRequest));
             case PAST:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByBookerIdAndEndIsBeforeOrderByStartDesc(bookerId, now));
+                        .findAllByBookerIdAndEndIsBeforeOrderByStartDesc(bookerId, now, pageRequest));
             case FUTURE:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByBookerIdAndStartIsAfterOrderByStartDesc(bookerId, now));
+                        .findAllByBookerIdAndStartIsAfterOrderByStartDesc(bookerId, now, pageRequest));
             case CURRENT:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(bookerId, now, now));
+                        .findAllByBookerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(bookerId, now, now, pageRequest));
             case WAITING:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByBookerIdAndStatusIsOrderByStartDesc(bookerId, Status.WAITING));
+                        .findAllByBookerIdAndStatusIsOrderByStartDesc(bookerId, Status.WAITING, pageRequest));
             case REJECTED:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByBookerIdAndStatusIsOrderByStartDesc(bookerId, Status.REJECTED));
+                        .findAllByBookerIdAndStatusIsOrderByStartDesc(bookerId, Status.REJECTED, pageRequest));
             default:
                 throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
         }
@@ -107,37 +109,38 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookingDtoResponse> getAllByOwner(Long ownerId, State state) {
+    public List<BookingDtoResponse> getAllByOwner(Long ownerId, State state, Long from, Integer size) {
         getUserIfPresent(ownerId);
         LocalDateTime now = LocalDateTime.now();
+        OffsetPageRequest pageRequest = OffsetPageRequest.of(from, size);
         switch (state) {
             case ALL:
-                return bookingMapper.toBookingDtoResponse(bookingRepository.findAllByItemOwnerIdOrderByStartDesc(ownerId));
+                return bookingMapper.toBookingDtoResponse(bookingRepository.findAllByItemOwnerIdOrderByStartDesc(ownerId, pageRequest));
             case PAST:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByItemOwnerIdAndEndIsBeforeOrderByStartDesc(ownerId, now));
+                        .findAllByItemOwnerIdAndEndIsBeforeOrderByStartDesc(ownerId, now, pageRequest));
             case FUTURE:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByItemOwnerIdAndStartIsAfterOrderByStartDesc(ownerId, now));
+                        .findAllByItemOwnerIdAndStartIsAfterOrderByStartDesc(ownerId, now, pageRequest));
             case CURRENT:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByItemOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(ownerId, now, now));
+                        .findAllByItemOwnerIdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(ownerId, now, now, pageRequest));
             case WAITING:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByItemOwnerIdAndStatusIsOrderByStartDesc(ownerId, Status.WAITING));
+                        .findAllByItemOwnerIdAndStatusIsOrderByStartDesc(ownerId, Status.WAITING, pageRequest));
             case REJECTED:
                 return bookingMapper.toBookingDtoResponse(bookingRepository
-                        .findAllByItemOwnerIdAndStatusIsOrderByStartDesc(ownerId, Status.REJECTED));
+                        .findAllByItemOwnerIdAndStatusIsOrderByStartDesc(ownerId, Status.REJECTED, pageRequest));
             default:
                 throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
         }
     }
 
     private User getUserIfPresent(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format("Пользователь не найден",userId)));
     }
 
     private Booking getBookingIfPresent(Long bookingId) {
-        return bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("Бронь не найдена"));
+        return bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException(String.format("Бронь не найдена", bookingId)));
     }
 }

@@ -19,4 +19,5 @@ public class ItemDtoRequest {
     private final String description;
     @NotNull(groups = Marker.OnCreate.class)
     private final Boolean available;
+    private Long requestId;
 }

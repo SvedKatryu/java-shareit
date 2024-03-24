@@ -46,9 +46,12 @@ public class BookingServiceImpl implements BookingService {
                         || (bookingDtoRequest.getStart().isBefore(b.getStart()) || bookingDtoRequest.getStart().equals(b.getStart()))
                         && (bookingDtoRequest.getEnd().isAfter(b.getEnd()) || bookingDtoRequest.getEnd().equals(b.getEnd()))
         );
-        if (!item.getAvailable() || isConflict) throw new ValidationException("Вещь не доступна для бронирования.");
-        if (userId.equals(item.getOwner().getId()))
+        if (!item.getAvailable() || isConflict) {
+            throw new ValidationException("Вещь не доступна для бронирования.");
+        }
+        if (userId.equals(item.getOwner().getId())) {
             throw new NotFoundException("Владелец не может забронировать свою вещь.");
+        }
         User booker = getUserIfPresent(userId);
         Booking booking = bookingMapper.toBooking(bookingDtoRequest, item, booker, Status.WAITING);
         bookingRepository.save(booking);
@@ -137,7 +140,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private User getUserIfPresent(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format("Пользователь не найден",userId)));
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format("Пользователь не найден", userId)));
     }
 
     private Booking getBookingIfPresent(Long bookingId) {

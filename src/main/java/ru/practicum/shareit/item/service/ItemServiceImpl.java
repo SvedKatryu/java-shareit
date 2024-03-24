@@ -49,8 +49,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional()
     public ItemDto addNewItem(Long userId, ItemDtoRequest itemDto) {
-        Item item = mapper.toItem(itemDto);
         User user = getUserIfPresent(userId);
+        Item item = mapper.toItem(itemDto);
         item.setOwner(user);
         addRequestToItem(itemDto, item);
         Item createdItem = itemRepository.save(item);
@@ -72,12 +72,12 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDtoResponse update(Long userId, Long itemId, ItemDtoRequest request) {
-        Item requestItem = mapper.toItem(request);
+        getUserIfPresent(userId);
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException(String.format("Вещь с ID%d не найдена", itemId)));
         if (!Objects.equals(item.getOwner().getId(), userId)) {
             throw new NotFoundException("Пользователь не является владельцем вещи");
         }
-        getUserIfPresent(userId);
+        Item requestItem = mapper.toItem(request);
         if (requestItem.getName() != null) {
             item.setName(requestItem.getName());
         }
@@ -95,7 +95,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public ItemDtoResponse getItemById(Long userId, Long itemId) {
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException(String.format("Вещь c ID%d не найдена", itemId)));
+        getUserIfPresent(userId);
+        Item item = getItemIfPresent(itemId);
         ItemDtoResponse responseItem = mapper.toResponse(item);
         responseItem.setComments(commentMapper.toCommentDto(commentRepository.findByItemIdIn(List.of(itemId))));
         if (!userId.equals(item.getOwner().getId())) return responseItem;
@@ -142,8 +143,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public CommentDto addComment(Long bookerId, Long itemId, CommentDto commentDto) {
+        getUserIfPresent(bookerId);
+        getItemIfPresent(itemId);
         Booking booking = bookingRepository.findFirstByItemIdAndBookerIdOrderByStart(itemId, bookerId)
-                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID%d не бронировал вещь с ID%d ",
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID%d не бронировал вещь с ID%d",
                         bookerId, itemId)));
         if (booking.getEnd().isAfter(LocalDateTime.now())) {
             throw new ValidationException("Пользователь может оставлять отзыв только после окончания срока аренды!");
@@ -173,6 +176,10 @@ public class ItemServiceImpl implements ItemService {
 
     private User getUserIfPresent(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID%d не найден", userId)));
+    }
+
+    private Item getItemIfPresent(Long itemId) {
+        return itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException(String.format("Вещь с ID%d не найдена", itemId)));
     }
 
 }

@@ -516,10 +516,7 @@ class ItemServiceImplTest {
         ItemDtoResponse getItemDto = new ItemDtoResponse(item.getId(), item.getName(), item.getDescription(), item.getAvailable(), null, null, null);
         when(itemMapper.toResponse(item))
                 .thenReturn(getItemDto);
-
-
         itemService.getItemById(requesterId, itemId);
-
         verify(userRepository, times(1)).findById(requesterId);
         verify(itemRepository, times(1)).findById(itemId);
         verify(itemMapper, times(1)).toResponse(item);
@@ -532,8 +529,6 @@ class ItemServiceImplTest {
     void findItemById_WhenUserNotFound_ShouldThrowNotFoundException() {
         when(userRepository.findById(requesterId))
                 .thenReturn(Optional.empty());
-
-
         NotFoundException e = assertThrows(NotFoundException.class,
                 () -> itemService.getItemById(requesterId, itemId));
         assertThat(e.getMessage(), is("Пользователь с ID" + requesterId + " не найден"));
@@ -552,8 +547,6 @@ class ItemServiceImplTest {
                 .thenReturn(Optional.of(requester));
         when(itemRepository.findById(itemId))
                 .thenReturn(Optional.empty());
-
-
         NotFoundException e = assertThrows(NotFoundException.class,
                 () -> itemService.getItemById(requesterId, itemId));
         assertThat(e.getMessage(), is("Вещь с ID" + itemId + " не найдена"));

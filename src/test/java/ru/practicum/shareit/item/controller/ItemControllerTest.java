@@ -2,7 +2,6 @@ package ru.practicum.shareit.item.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -69,12 +68,10 @@ class ItemControllerTest {
 
     private Long itemId;
 
-    private final EasyRandom generator = new EasyRandom();
     ItemDtoRequest request;
 
     @BeforeEach
     void setUp() {
-        request = generator.nextObject(ItemDtoRequest.class);
         userId = 1L;
         header = "X-Sharer-User-Id";
         itemDto = ItemDto.builder()
@@ -103,14 +100,6 @@ class ItemControllerTest {
     @DisplayName("Добавление вещи")
     @SneakyThrows
     void addItem_ShouldReturnStatus200() {
-//        when(itemService.addNewItem(Mockito.anyLong(), Mockito.any(ItemDtoRequest.class)))
-//                .thenAnswer(invocationOnMock -> {
-//                    ItemDtoRequest itemDtoRequest = invocationOnMock.getArgument(1, ItemDtoRequest.class);
-//                    Item item = itemMapper.toItem(itemDtoRequest);
-//                    ItemDto itemDto = itemMapper.toItemWithRequest(item);
-//                    itemDto.setId(itemId);
-//                    return itemDto;
-//                });
         when(itemService.addNewItem(userId, itemDtoRequest))
                 .thenReturn(itemDto);
         when(itemMapper.toItemWithRequest(item)).thenReturn(itemDto);
@@ -183,14 +172,6 @@ class ItemControllerTest {
                 .build();
         when(itemMapper.toItem(itemUpdateDto)).thenReturn(item);
         when(itemMapper.toResponse(item)).thenReturn(itemDtoResponse);
-//                when(itemService.update(Mockito.anyLong(), Mockito.anyLong(), Mockito.any(ItemDtoRequest.class)))
-//                .thenAnswer(invocationOnMock -> {
-//                    ItemDtoRequest itemDtoRequest = invocationOnMock.getArgument(2, ItemDtoRequest.class);
-//                    Item item = itemMapper.toItem(itemDtoRequest);
-//                    ItemDtoResponse itemDtoResponse = itemMapper.toResponse(item);
-//                    itemDtoResponse.setId(itemId);
-//                    return itemDtoResponse;
-//                });
         when(itemService.update(userId, itemId, itemUpdateDto))
                 .thenReturn(itemDtoResponse);
 
@@ -390,7 +371,6 @@ class ItemControllerTest {
         verify(itemService, times(1)).findItemsByText(text, from, size);
     }
 
-
     @Test
     @DisplayName("Поиск вещей, пустой запрос")
     @SneakyThrows
@@ -428,7 +408,6 @@ class ItemControllerTest {
 
         verify(itemService, never()).findItemsByText(any(), any(), any());
     }
-
 
     @Test
     @DisplayName("Добавление комментария")

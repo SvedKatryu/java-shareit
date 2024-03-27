@@ -41,7 +41,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
-
 class ItemServiceImplIntegrationTest {
 
     private final ItemServiceImpl itemService;
@@ -412,7 +411,6 @@ class ItemServiceImplIntegrationTest {
                 savedItem.getId()));
     }
 
-
     private void setUpBookings(long itemId) {
         BookingDtoRequest addBookingDto1 = BookingDtoRequest.builder()
                 .itemId(itemId)
@@ -420,20 +418,17 @@ class ItemServiceImplIntegrationTest {
                 .end(LocalDateTime.now().plusDays(4))
                 .build();
         savedBooking1 = bookingService.add(savedUser2.getId(), addBookingDto1);
-//        bookingService.acknowledgeBooking(savedUser1.getId(), savedBooking1.getId(), true);
         BookingDtoRequest addBookingDto2 = BookingDtoRequest.builder()
                 .itemId(itemId)
                 .start(LocalDateTime.now().minusDays(8))
                 .end(LocalDateTime.now().minusDays(7))
                 .build();
         savedBooking2 = bookingService.add(savedUser2.getId(), addBookingDto2);
-//        bookingService.acknowledgeBooking(savedUser1.getId(), savedBooking2.getId(), true);
         BookingDtoRequest addBookingDto3 = BookingDtoRequest.builder()
                 .itemId(itemId)
                 .start(LocalDateTime.now().plusDays(10))
                 .end(LocalDateTime.now().plusDays(12))
                 .build();
         savedBooking3 = bookingService.add(savedUser2.getId(), addBookingDto3);
-//        bookingService.acknowledgeBooking(savedUser1.getId(), savedBooking3.getId(), true);
     }
 }

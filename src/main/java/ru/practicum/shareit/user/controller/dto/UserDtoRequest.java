@@ -1,21 +1,25 @@
 package ru.practicum.shareit.user.controller.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import ru.practicum.shareit.markers.Marker;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Null;
 
-@Getter
+
+@Data
 @AllArgsConstructor
+//@NoArgsConstructor
+@Builder
 public class UserDtoRequest {
     @Null(groups = Marker.OnCreate.class)
-    private final Long id;
+    private Long id;
     @NotBlank(groups = Marker.OnCreate.class)
-    private final String name;
+    private String name;
     @Email(groups = Marker.OnCreate.class)
     @NotBlank(groups = Marker.OnCreate.class)
-    private final String email;
+    private String email;
 }

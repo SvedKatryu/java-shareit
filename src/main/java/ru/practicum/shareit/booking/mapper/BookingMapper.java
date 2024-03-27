@@ -17,7 +17,7 @@ import java.util.List;
 public interface BookingMapper {
     BookingDtoResponse toBookingDtoResponse(Booking booking);
 
-    List<BookingDtoResponse> toBookingDtoResponse(List<Booking> booking);
+    List<BookingDtoResponse> toBookingDtoResponseList(List<Booking> booking);
 
     @Mapping(target = "id", ignore = true)
     Booking toBooking(BookingDtoRequest bookingDtoRequest, Item item, User booker, Status status);

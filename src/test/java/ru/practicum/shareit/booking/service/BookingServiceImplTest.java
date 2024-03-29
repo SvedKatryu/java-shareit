@@ -16,7 +16,6 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.State;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.repository.JpaBookingRepository;
-import ru.practicum.shareit.booking.service.BookingServiceImpl;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.controller.dto.ItemDtoResponse;
@@ -203,6 +202,45 @@ class BookingServiceImplTest {
         verify(itemRepository, times(1)).findById(itemId);
         verify(bookingRepository, never()).save(any());
         verify(bookingMapper, never()).toBookingDtoResponse(any());
+    }
+
+    @Test
+    @DisplayName("Добавление бронирования, Время начала или конца бронирования неверное")
+    void addBooking_StartEndIncorrect_ShouldThrowValidationException() {
+        User user = new User();
+        when(userRepository.findById(userId))
+                .thenReturn(Optional.of(user));
+        bookingDtoRequest.setStart(LocalDateTime.now().plusDays(10));
+        ValidationException e = assertThrows(ValidationException.class,
+                () -> bookingService.add(userId, bookingDtoRequest));
+
+        assertThat(e.getMessage(), is("Время начала = " + bookingDtoRequest.getStart() + " или конца = " + bookingDtoRequest.getEnd() + " бронирования неверное"));
+
+
+        verify(bookingRepository, never()).save(any());
+        verify(bookingMapper, never()).toBookingDtoResponse(any());
+    }
+
+    @Test
+    @DisplayName("Добавление бронирования, Вещь не доступна для бронирования")
+    void addBooking_ItemUnavaible_ShouldThrowValidationException() {
+        User user = new User();
+        when(userRepository.findById(userId))
+                .thenReturn(Optional.of(user));
+        when(itemRepository.findById(itemId))
+                .thenReturn(Optional.of(item));
+        when(bookingMapper.toBooking(any(), any(), any(), any()))
+                .thenReturn(booking);
+        when(bookingMapper.toBookingDtoResponse(any()))
+                .thenReturn(bookingDtoResponse);
+        bookingService.add(userId, bookingDtoRequest);
+        when(bookingRepository.findByItemIdInAndStatusNot(List.of(itemId), Status.REJECTED))
+                .thenReturn(List.of(booking));
+        bookingDtoRequest.setStart(LocalDateTime.now().plusDays(2));
+        ValidationException e = assertThrows(ValidationException.class,
+                () -> bookingService.add(userId, bookingDtoRequest));
+
+        assertThat(e.getMessage(), is("Вещь не доступна для бронирования."));
     }
 
     @Test

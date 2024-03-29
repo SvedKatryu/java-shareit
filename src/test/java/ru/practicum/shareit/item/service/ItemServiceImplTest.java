@@ -500,7 +500,7 @@ class ItemServiceImplTest {
         assertThat(bookings.size(), is(2));
         assertThat(bookings.get(0), is(booking1));
         assertThat(bookings.get(1), is(booking3));
-        verify(commentMapper, times(1)).toCommentDto(List.of(comment));
+        verify(commentMapper, times(1)).toCommentDtoList(List.of(comment));
     }
 
     @Test
@@ -521,7 +521,7 @@ class ItemServiceImplTest {
         verify(itemRepository, times(1)).findById(itemId);
         verify(itemMapper, times(1)).toResponse(item);
         verify(commentRepository, times(1)).findByItemIdIn(List.of(itemId));
-        verify(commentMapper, times(1)).toCommentDto(List.of(comment));
+        verify(commentMapper, times(1)).toCommentDtoList(List.of(comment));
     }
 
     @Test
@@ -590,7 +590,7 @@ class ItemServiceImplTest {
                 .lastBooking(bookingDtoForItem)
                 .nextBooking(bookingDtoForItem)
                 .build();
-        when(commentMapper.toCommentDto(List.of(comment)))
+        when(commentMapper.toCommentDtoList(List.of(comment)))
                 .thenReturn(List.of(commentDto));
         when(commentRepository.findByItemIdIn(List.of(itemId)))
                 .thenReturn(List.of(comment));
@@ -619,7 +619,7 @@ class ItemServiceImplTest {
         assertThat(captorValue.getPageSize(), is(size));
         verify(bookingRepository, times(1)).findByItemIdInAndStatusNot(List.of(itemId), Status.REJECTED);
         verify(commentRepository, times(1)).findByItemIdIn(List.of(itemId));
-        verify(commentMapper, times(1)).toCommentDto(List.of(comment));
+        verify(commentMapper, times(1)).toCommentDtoList(List.of(comment));
     }
 
     @Test
@@ -645,7 +645,7 @@ class ItemServiceImplTest {
                 .text("dto comment")
                 .authorName("author name")
                 .build();
-        when(commentMapper.toCommentDto(List.of(comment)))
+        when(commentMapper.toCommentDtoList(List.of(comment)))
                 .thenReturn(List.of(commentDto));
         when(commentRepository.findByItemIdIn(List.of(itemId)))
                 .thenReturn(List.of(comment));
@@ -673,7 +673,7 @@ class ItemServiceImplTest {
         assertThat(captorValue.getPageSize(), is(size));
         verify(bookingRepository, times(1)).findByItemIdInAndStatusNot(List.of(itemId), Status.REJECTED);
         verify(commentRepository, times(1)).findByItemIdIn(List.of(itemId));
-        verify(commentMapper, times(1)).toCommentDto(List.of(comment));
+        verify(commentMapper, times(1)).toCommentDtoList(List.of(comment));
     }
 
     @Test
@@ -700,7 +700,7 @@ class ItemServiceImplTest {
                 .text("dto comment")
                 .authorName("author name")
                 .build();
-        when(commentMapper.toCommentDto(List.of(comment)))
+        when(commentMapper.toCommentDtoList(List.of(comment)))
                 .thenReturn(List.of(commentDto));
         when(commentRepository.findByItemIdIn(List.of(itemId)))
                 .thenReturn(List.of(comment));
@@ -734,7 +734,7 @@ class ItemServiceImplTest {
         assertThat(captorValue.getPageSize(), is(size));
         verify(bookingRepository, times(1)).findByItemIdInAndStatusNot(List.of(itemId), Status.REJECTED);
         verify(commentRepository, times(1)).findByItemIdIn(List.of(itemId));
-        verify(commentMapper, times(1)).toCommentDto(List.of(comment));
+        verify(commentMapper, times(1)).toCommentDtoList(List.of(comment));
     }
 
     @Test

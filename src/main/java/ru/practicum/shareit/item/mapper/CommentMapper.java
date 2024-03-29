@@ -15,5 +15,5 @@ public interface CommentMapper {
     CommentDto toCommentDto(Comment comment);
 
     @Mapping(target = "authorName", expression = "java(comment.getAuthor().getName())")
-    List<CommentDto> toCommentDto(List<Comment> comments);
+    List<CommentDto> toCommentDtoList(List<Comment> comments);
 }

@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.notNullValue;
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ItemRepositoryTest {
+class JpaItemRepositoryTest {
 
     @Autowired
     private JpaItemRepository itemStorage;

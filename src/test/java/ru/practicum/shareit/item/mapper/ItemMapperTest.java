@@ -17,7 +17,7 @@ class ItemMapperTest {
     private ItemMapper itemMapper;
 
     @BeforeAll
-    void init() {
+    void setUp() {
         itemMapper = new ItemMapperImpl();
     }
 

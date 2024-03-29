@@ -52,7 +52,7 @@ class CommentRepositoryTest {
     private Comment savedComment3;
 
     @BeforeAll
-    void init() {
+    void setUp() {
         User user1 = createUser(1);
         savedUser1 = userRepository.save(user1);
         User user2 = createUser(2);

@@ -98,7 +98,7 @@ public class ItemServiceImpl implements ItemService {
         getUserIfPresent(userId);
         Item item = getItemIfPresent(itemId);
         ItemDtoResponse responseItem = mapper.toResponse(item);
-        responseItem.setComments(commentMapper.toCommentDto(commentRepository.findByItemIdIn(List.of(itemId))));
+        responseItem.setComments(commentMapper.toCommentDtoList(commentRepository.findByItemIdIn(List.of(itemId))));
         if (!userId.equals(item.getOwner().getId())) return responseItem;
         List<Booking> bookings = bookingRepository
                 .findByItemIdInAndStatusNot(List.of(itemId), Status.REJECTED);
@@ -127,7 +127,7 @@ public class ItemServiceImpl implements ItemService {
         return items.stream()
                 .peek(i -> i.setLastBooking(findLastBooking(bookingsByItemId.get(i.getId()))))
                 .peek(i -> i.setNextBooking(findNextBooking(bookingsByItemId.get(i.getId()))))
-                .peek(i -> i.setComments(commentMapper.toCommentDto(commentsMapByItemId.get(i.getId()))))
+                .peek(i -> i.setComments(commentMapper.toCommentDtoList(commentsMapByItemId.get(i.getId()))))
                 .collect(Collectors.toList());
     }
 

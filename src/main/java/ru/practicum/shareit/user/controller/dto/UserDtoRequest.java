@@ -12,7 +12,6 @@ import javax.validation.constraints.Null;
 
 @Data
 @AllArgsConstructor
-//@NoArgsConstructor
 @Builder
 public class UserDtoRequest {
     @Null(groups = Marker.OnCreate.class)

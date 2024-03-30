@@ -13,7 +13,7 @@ import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.controller.dto.CommentDto;
 import ru.practicum.shareit.item.controller.dto.ItemDtoRequest;
 import ru.practicum.shareit.item.controller.dto.ItemDtoResponse;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.controller.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
@@ -61,7 +61,7 @@ public class ItemServiceImpl implements ItemService {
 
     private void addRequestToItem(ItemDtoRequest itemDto, Item item) {
         Long requestId = itemDto.getRequestId();
-        if (requestId != null && requestId > 0) {
+        if (requestId != null) {
             ItemRequest itemRequest = itemRequestRepository.findById(requestId)
                     .orElseThrow(() -> new NotFoundException(String.format("Запрос с ID%d не найден", requestId)));
             itemRequest.addItem(item);

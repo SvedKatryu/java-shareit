@@ -17,7 +17,7 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.controller.dto.CommentDto;
 import ru.practicum.shareit.item.controller.dto.ItemDtoRequest;
 import ru.practicum.shareit.item.controller.dto.ItemDtoResponse;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.controller.dto.ItemDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.JpaUserRepository;
 

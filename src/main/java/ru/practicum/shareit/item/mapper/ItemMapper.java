@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import ru.practicum.shareit.item.controller.dto.ItemDtoRequest;
 import ru.practicum.shareit.item.controller.dto.ItemDtoResponse;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.controller.dto.ItemDto;
 
 @Mapper(componentModel = "spring")
 public interface ItemMapper {

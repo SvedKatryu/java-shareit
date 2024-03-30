@@ -9,7 +9,7 @@ import ru.practicum.shareit.item.controller.dto.ItemDtoRequest;
 import ru.practicum.shareit.item.controller.dto.ItemDtoResponse;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
 import ru.practicum.shareit.markers.Marker;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.controller.dto.ItemDto;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import ru.practicum.shareit.item.controller.dto.ItemDtoResponse;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.controller.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
 import static org.hamcrest.MatcherAssert.assertThat;

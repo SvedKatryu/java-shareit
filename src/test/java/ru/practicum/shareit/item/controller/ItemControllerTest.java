@@ -16,8 +16,7 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import ru.practicum.shareit.item.controller.dto.CommentDto;
 import ru.practicum.shareit.item.controller.dto.ItemDtoRequest;
 import ru.practicum.shareit.item.controller.dto.ItemDtoResponse;
-import ru.practicum.shareit.item.dto.*;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.controller.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
@@ -61,7 +60,7 @@ class ItemControllerTest {
 
     private Item item;
 
-    private ru.practicum.shareit.item.dto.ItemDto itemDto;
+    private ItemDto itemDto;
     private ItemDtoRequest itemDtoRequest;
     private ItemDtoResponse itemDtoResponse;
     private CommentDto commentDto;

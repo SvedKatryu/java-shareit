@@ -5,12 +5,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.2</version>
+        <version>2.7.9</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>ru.practicum</groupId>
     <artifactId>shareit</artifactId>
+    <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
 
     <name>ShareIt</name>
@@ -20,6 +21,11 @@
         <mapstruct.version>1.4.1.Final</mapstruct.version>
         <lombok-mapstruct.version>0.2.0</lombok-mapstruct.version>
     </properties>
+
+    <modules>
+        <module>gateway</module>
+        <module>server</module>
+    </modules>
 
     <dependencies>
         <dependency>
@@ -263,5 +269,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>

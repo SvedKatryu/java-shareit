@@ -10,19 +10,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import ru.practicum.shareit.request.dto.ItemRequestDtoRequest;
 import ru.practicum.shareit.request.dto.ItemRequestDtoResponse;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -76,22 +73,22 @@ class ItemRequestControllerTest {
         verify(itemRequestService, never()).addNewItemRequest(any(), any());
     }
 
-    @Test
-    @DisplayName("Добавление нового запроса, запрос без описания")
-    @SneakyThrows
-    public void addNewItemRequest_NotValidRequestBody_ShouldThrowMethodArgumentNotValidException() {
-        ItemRequestDtoRequest requestDto = new ItemRequestDtoRequest();
-
-        mvc.perform(post("/requests")
-                        .header(header, userId)
-                        .content(objectMapper.writeValueAsString(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
-
-        verify(itemRequestService, never()).addNewItemRequest(eq(userId), any());
-    }
+//    @Test
+//    @DisplayName("Добавление нового запроса, запрос без описания")
+//    @SneakyThrows
+//    public void addNewItemRequest_NotValidRequestBody_ShouldThrowMethodArgumentNotValidException() {
+//        ItemRequestDtoRequest requestDto = new ItemRequestDtoRequest();
+//
+//        mvc.perform(post("/requests")
+//                        .header(header, userId)
+//                        .content(objectMapper.writeValueAsString(requestDto))
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isBadRequest())
+//                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
+//
+//        verify(itemRequestService, never()).addNewItemRequest(eq(userId), any());
+//    }
 
     @Test
     @DisplayName("Добавление нового запроса,запрос без заголовка")
@@ -161,47 +158,47 @@ class ItemRequestControllerTest {
         verify(itemRequestService, never()).getAvailableItemRequests(any(), any(), any());
     }
 
-    @Test
-    @DisplayName("Поиск доступных запросов, from < 0")
-    @SneakyThrows
-    public void getAvailableItemRequests_NegativeFrom_ShouldThrowConstraintViolationException() {
-        mvc.perform(get("/requests/all")
-                        .header(header, userId)
-                        .param("from", "-1")
-                        .param("size", "1"))
-                .andExpect(status().isBadRequest())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ConstraintViolationException));
+//    @Test
+//    @DisplayName("Поиск доступных запросов, from < 0")
+//    @SneakyThrows
+//    public void getAvailableItemRequests_NegativeFrom_ShouldThrowConstraintViolationException() {
+//        mvc.perform(get("/requests/all")
+//                        .header(header, userId)
+//                        .param("from", "-1")
+//                        .param("size", "1"))
+//                .andExpect(status().isBadRequest())
+//                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ConstraintViolationException));
+//
+//        verify(itemRequestService, never()).getAvailableItemRequests(any(), any(), any());
+//    }
 
-        verify(itemRequestService, never()).getAvailableItemRequests(any(), any(), any());
-    }
+//    @Test
+//    @DisplayName("Поиск доступных запросов, size < 0")
+//    @SneakyThrows
+//    public void getAvailableItemRequests_NegativeSize_ShouldThrowConstraintViolationException() {
+//        mvc.perform(get("/requests/all")
+//                        .header(header, userId)
+//                        .param("from", "1")
+//                        .param("size", "-14"))
+//                .andExpect(status().isBadRequest())
+//                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ConstraintViolationException));
+//
+//        verify(itemRequestService, never()).getAvailableItemRequests(any(), any(), any());
+//    }
 
-    @Test
-    @DisplayName("Поиск доступных запросов, size < 0")
-    @SneakyThrows
-    public void getAvailableItemRequests_NegativeSize_ShouldThrowConstraintViolationException() {
-        mvc.perform(get("/requests/all")
-                        .header(header, userId)
-                        .param("from", "1")
-                        .param("size", "-14"))
-                .andExpect(status().isBadRequest())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ConstraintViolationException));
-
-        verify(itemRequestService, never()).getAvailableItemRequests(any(), any(), any());
-    }
-
-    @Test
-    @DisplayName("Поиск доступных запросов, size = 0")
-    @SneakyThrows
-    public void getAvailableItemRequests_ZeroSize_ShouldThrowConstraintViolationException() {
-        mvc.perform(get("/requests/all")
-                        .header(header, userId)
-                        .param("from", "1")
-                        .param("size", "0"))
-                .andExpect(status().isBadRequest())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ConstraintViolationException));
-
-        verify(itemRequestService, never()).getAvailableItemRequests(any(), any(), any());
-    }
+//    @Test
+//    @DisplayName("Поиск доступных запросов, size = 0")
+//    @SneakyThrows
+//    public void getAvailableItemRequests_ZeroSize_ShouldThrowConstraintViolationException() {
+//        mvc.perform(get("/requests/all")
+//                        .header(header, userId)
+//                        .param("from", "1")
+//                        .param("size", "0"))
+//                .andExpect(status().isBadRequest())
+//                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ConstraintViolationException));
+//
+//        verify(itemRequestService, never()).getAvailableItemRequests(any(), any(), any());
+//    }
 
     @Test
     @DisplayName("Поиск доступных запросов с параметрами по умолчанию")

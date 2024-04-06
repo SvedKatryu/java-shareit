@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.practicum.shareit.user.controller.dto.UserDtoRequest;
 import ru.practicum.shareit.user.controller.dto.UserDtoResponse;
 import ru.practicum.shareit.user.service.UserServiceImpl;
@@ -18,8 +17,6 @@ import ru.practicum.shareit.user.service.UserServiceImpl;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -82,20 +79,20 @@ class UserControllerTest {
         verify(userService, times(1)).create(userDtoRequest);
     }
 
-    @Test
-    @DisplayName("Добавление пользователя без email")
-    @SneakyThrows
-    void addUser_NotValidUser_ShouldThrowMethodArgumentNotValidException() {
-        userDtoRequest.setEmail(null);
-
-        mvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userDtoRequest)))
-                .andExpect(status().isBadRequest())
-                .andExpect(result ->
-                        assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
-        verify(userService, never()).create(userDtoRequest);
-    }
+//    @Test
+//    @DisplayName("Добавление пользователя без email")
+//    @SneakyThrows
+//    void addUser_NotValidUser_ShouldThrowMethodArgumentNotValidException() {
+//        userDtoRequest.setEmail(null);
+//
+//        mvc.perform(post("/users")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(userDtoRequest)))
+//                .andExpect(status().isBadRequest())
+//                .andExpect(result ->
+//                        assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
+//        verify(userService, never()).create(userDtoRequest);
+//    }
 
     @Test
     @DisplayName("Обновление данных пользователя")

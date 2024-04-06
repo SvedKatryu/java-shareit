@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import ru.practicum.shareit.booking.dto.BookingDtoRequest;
@@ -128,20 +129,20 @@ class BookingControllerTest {
         verify(bookingService, times(1)).add(userId, bookingDtoRequest);
     }
 
-//    @Test
-//    @DisplayName("Добавление бронирования, дата старта в прошлом")
-//    @SneakyThrows
-//    void add_BookingStartInPast_ShouldThrowMethodArgumentNotValidException() {
-//        bookingDtoRequest.setStart(LocalDateTime.now().minusDays(1));
-//
-//        mvc.perform(post("/bookings")
-//                        .header(header, userId)
-//                        .contentType(APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(bookingDtoRequest)))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
-//        verify(bookingService, never()).add(any(), any());
-//    }
+    @Test
+    @DisplayName("Добавление бронирования, дата старта в прошлом")
+    @SneakyThrows
+    void add_BookingStartInPast_ShouldThrowMethodArgumentNotValidException() {
+        bookingDtoRequest.setStart(LocalDateTime.now().minusDays(1));
+
+        mvc.perform(post("/bookings")
+                        .header(header, userId)
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(bookingDtoRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
+        verify(bookingService, never()).add(any(), any());
+    }
 
     @Test
     @DisplayName("Добавление бронирования, запрос без заголовка")

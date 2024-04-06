@@ -17,7 +17,6 @@ import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 import ru.practicum.shareit.booking.model.State;
 import ru.practicum.shareit.booking.service.BookingServiceImpl;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -33,7 +32,7 @@ public class BookingController {
     private static final String DEFAULT_PAGE_SIZE = "10";
 
     @PostMapping
-    public BookingDtoResponse add(@RequestHeader("X-Sharer-User-Id") long userId, @Valid @RequestBody BookingDtoRequest bookingDtoRequest) {
+    public BookingDtoResponse add(@RequestHeader("X-Sharer-User-Id") long userId, @Validated @RequestBody BookingDtoRequest bookingDtoRequest) {
         log.info("Получен запрос на бронирование вещи {}", bookingDtoRequest);
         return bookingService.add(userId, bookingDtoRequest);
     }

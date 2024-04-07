@@ -31,7 +31,7 @@ public class BaseClient {
         return post(path, null, null, body, returnType);
     }
 
-    protected <T, S, H> H post(String path, T body, Class<S> returnRequestType, Class<H> returnResponseType) {
+    protected <T, S, H> H post(String path, T body, Class<H> returnResponseType, Class<S> returnRequestType) {
         return post(path, null, null, body, returnResponseType);
     }
 

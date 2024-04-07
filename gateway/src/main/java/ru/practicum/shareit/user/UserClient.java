@@ -26,7 +26,7 @@ public class UserClient extends BaseClient {
     }
 
     public UserDtoResponse create(UserDtoRequest request) {
-        return post("", request, UserDtoRequest.class, UserDtoResponse.class);
+        return post("", request, UserDtoResponse.class, UserDtoRequest.class);
     }
 
     public UserDtoResponse update(long userId, UserDtoRequest userUpdateDto) {

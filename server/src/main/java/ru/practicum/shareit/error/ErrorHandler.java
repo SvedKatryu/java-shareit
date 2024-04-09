@@ -1,6 +1,7 @@
 package ru.practicum.shareit.error;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -43,13 +44,20 @@ public class ErrorHandler {
         return new ErrorResponse(ex.getMessage());
     }
 
+//    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ResponseBody
+//    public Map<String, String> handleIllegalArgumentException(final IllegalArgumentException ex) {
+//        String err = ex.getMessage();
+//        Map<String, String> res = Map.of("error:", err);
+//        return res;
+//    }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public Map<String, String> handleIllegalArgumentException(final IllegalArgumentException ex) {
-        String err = ex.getMessage();
-        Map<String, String> res = Map.of("error:", err);
-        return res;
+    public ErrorResponse handleIllegalArgumentException(final IllegalArgumentException ex) {
+        return new ErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler

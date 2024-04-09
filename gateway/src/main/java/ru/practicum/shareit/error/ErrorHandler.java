@@ -57,13 +57,20 @@ public class ErrorHandler {
         return new ErrorResponse(ex.getMessage());
     }
 
+//    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ResponseBody
+//    public Map<String, String> handleIllegalArgumentException(final IllegalArgumentException ex) {
+//        String err = ex.getMessage();
+//        Map<String, String> res = Map.of("error:", err);
+//        return res;
+//    }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public Map<String, String> handleIllegalArgumentException(final IllegalArgumentException ex) {
-        String err = ex.getMessage();
-        Map<String, String> res = Map.of("error:", err);
-        return res;
+    public ErrorResponse handleIllegalArgumentException(final IllegalArgumentException ex) {
+        return new ErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler

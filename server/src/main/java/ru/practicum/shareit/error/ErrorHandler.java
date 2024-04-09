@@ -10,6 +10,7 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 
 import javax.validation.ConstraintViolationException;
+import java.util.Map;
 
 
 @RestControllerAdvice
@@ -40,6 +41,15 @@ public class ErrorHandler {
     @ResponseBody
     public ErrorResponse handleValidationException(final ValidationException ex) {
         return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public Map<String, String> handleIllegalArgumentException(final IllegalArgumentException ex) {
+        String err = ex.getMessage();
+        Map<String, String> res = Map.of("error:", err);
+        return res;
     }
 
     @ExceptionHandler

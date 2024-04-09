@@ -11,7 +11,6 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 
 import javax.validation.ConstraintViolationException;
-import java.util.Map;
 
 
 @RestControllerAdvice
@@ -44,20 +43,12 @@ public class ErrorHandler {
         return new ErrorResponse(ex.getMessage());
     }
 
-//    @ExceptionHandler
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    @ResponseBody
-//    public Map<String, String> handleIllegalArgumentException(final IllegalArgumentException ex) {
-//        String err = ex.getMessage();
-//        Map<String, String> res = Map.of("error:", err);
-//        return res;
-//    }
-
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleIllegalArgumentException(final IllegalArgumentException ex) {
-        return new ErrorResponse(ex.getMessage());
+    protected ResponseEntity<Object> handleIllegalArgumentException(final IllegalArgumentException ex) {
+        ErrorResponse err = new ErrorResponse(ex.getMessage());
+        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler

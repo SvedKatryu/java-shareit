@@ -52,19 +52,24 @@ public class BookingController {
 
     @GetMapping
     public List<BookingDtoResponse> getAllByBooker(@RequestHeader("X-Sharer-User-Id") long bookerId,
-                                                   @RequestParam(name = "state", defaultValue = "ALL") State state,
+                                                   @RequestParam(name = "state", defaultValue = "ALL") String state,
                                                    @RequestParam(defaultValue = "0") @PositiveOrZero Long from,
                                                    @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) @Positive Integer size) {
         log.info("Получен запрос на получение всех бронирований пользователя ID{}", bookerId);
-        return bookingService.getAllByBooker(bookerId, state, from, size);
+        State currentState = State.from(state)
+                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + state));
+
+        return bookingService.getAllByBooker(bookerId, currentState, from, size);
     }
 
     @GetMapping("/owner")
     public List<BookingDtoResponse> getAllByOwner(@RequestHeader("X-Sharer-User-Id") long ownerId,
-                                                  @RequestParam(name = "state", defaultValue = "ALL") State state,
+                                                  @RequestParam(name = "state", defaultValue = "ALL") String state,
                                                   @RequestParam(defaultValue = "0") @PositiveOrZero Long from,
                                                   @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) @Positive Integer size) {
         log.info("Получен запрос на получение списка бронирований всех вещей пользователя ID{}", ownerId);
-        return bookingService.getAllByOwner(ownerId, state, from, size);
+        State currentState = State.from(state)
+                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + state));
+        return bookingService.getAllByOwner(ownerId, currentState, from, size);
     }
 }

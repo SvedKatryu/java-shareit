@@ -2,7 +2,6 @@ package ru.practicum.shareit.request.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,14 +14,11 @@ import ru.practicum.shareit.request.dto.ItemRequestDtoRequest;
 import ru.practicum.shareit.request.dto.ItemRequestDtoResponse;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/requests")
 @RequiredArgsConstructor
-@Validated
 @Slf4j
 public class ItemRequestController {
     private static final String DEFAULT_PAGE_SIZE = "10";
@@ -31,7 +27,7 @@ public class ItemRequestController {
 
     @PostMapping
     public ItemRequestDtoResponse addNewItemRequest(@RequestHeader("X-Sharer-User-id") Long userId,
-                                                    @RequestBody @Validated ItemRequestDtoRequest itemRequestDtoRequest) {
+                                                    @RequestBody ItemRequestDtoRequest itemRequestDtoRequest) {
         log.info("Добавлен новый запрос вещи");
         return itemRequestService.addNewItemRequest(userId, itemRequestDtoRequest);
     }
@@ -44,8 +40,8 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     public List<ItemRequestDtoResponse> getAvailableItemRequests(@RequestHeader("X-Sharer-User-id") Long userId,
-                                                                 @RequestParam(defaultValue = "0") @PositiveOrZero Long from,
-                                                                 @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) @Positive Integer size) {
+                                                                 @RequestParam(defaultValue = "0") Long from,
+                                                                 @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) Integer size) {
         log.info("Получение списка запросов, начиная с '{}', по '{}' элемента на странице.", from, size);
         return itemRequestService.getAvailableItemRequests(userId, from, size);
     }

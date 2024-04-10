@@ -110,8 +110,7 @@ public class BookingServiceImpl implements BookingService {
                 return bookingMapper.toBookingDtoResponseList(bookingRepository
                         .findAllByBookerIdAndStatusIsOrderByStartDesc(bookerId, Status.REJECTED, pageRequest));
             default:
-//                throw new IllegalArgumentException("Unknown state:" + state);
-                return null;
+                return List.of();
         }
     }
 
@@ -140,8 +139,7 @@ public class BookingServiceImpl implements BookingService {
                 return bookingMapper.toBookingDtoResponseList(bookingRepository
                         .findAllByItemOwnerIdAndStatusIsOrderByStartDesc(ownerId, Status.REJECTED, pageRequest));
             default:
-//                throw new IllegalArgumentException("Unknown state:" + state);
-                return null;
+                return List.of();
         }
     }
 

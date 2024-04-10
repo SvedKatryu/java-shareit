@@ -2,9 +2,14 @@ package ru.practicum.shareit.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.markers.Marker;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.user.controller.dto.UserDtoRequest;
 import ru.practicum.shareit.user.controller.dto.UserDtoResponse;
 import ru.practicum.shareit.user.service.UserServiceImpl;
@@ -14,21 +19,20 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
-@Validated
 @Slf4j
 public class UserController {
 
     private final UserServiceImpl userService;
 
     @PostMapping
-    public UserDtoResponse create(@Validated({Marker.OnCreate.class}) @RequestBody UserDtoRequest request) {
+    public UserDtoResponse create(@RequestBody UserDtoRequest request) {
         log.info("Получен запрос на добавление пользователя {}", request);
         return userService.create(request);
     }
 
     @PatchMapping("/{id}")
     public UserDtoResponse update(@PathVariable(value = "id") Long id,
-                                  @Validated({Marker.OnUpdate.class}) @RequestBody UserDtoRequest updatedUser) {
+                                  @RequestBody UserDtoRequest updatedUser) {
         log.info("Получен запрос на редактирование пользователя ID{}", id);
         return userService.update(id, updatedUser);
     }

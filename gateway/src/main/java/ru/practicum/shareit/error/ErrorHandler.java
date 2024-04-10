@@ -31,35 +31,30 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
     public ErrorResponse handleHttpClientBadRequestException(final HttpClientErrorException.BadRequest ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ErrorResponse handleConstraintValidationException(final ConstraintViolationException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public ErrorResponse handleConstraintValidationException(final ConstraintViolationException ex) {
+//        return new ErrorResponse(ex.getMessage());
+//    }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException ex) {
+//        return new ErrorResponse(ex.getMessage());
+//    }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ErrorResponse handleValidationException(final ValidationException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
+//    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public ErrorResponse handleValidationException(final ValidationException ex) {
+//        return new ErrorResponse(ex.getMessage());
+//    }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
     protected ResponseEntity<Object> handleIllegalArgumentException(final IllegalArgumentException ex) {
         ErrorResponse err = new ErrorResponse(ex.getMessage());
         return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);

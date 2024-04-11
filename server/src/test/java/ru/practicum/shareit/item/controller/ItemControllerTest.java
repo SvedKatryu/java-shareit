@@ -11,12 +11,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import ru.practicum.shareit.item.controller.dto.CommentDto;
+import ru.practicum.shareit.item.controller.dto.ItemDto;
 import ru.practicum.shareit.item.controller.dto.ItemDtoRequest;
 import ru.practicum.shareit.item.controller.dto.ItemDtoResponse;
-import ru.practicum.shareit.item.controller.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
@@ -133,24 +132,6 @@ class ItemControllerTest {
                         .content(mapper.writeValueAsString(itemDto)))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MissingRequestHeaderException));
-
-        verify(itemService, never()).addNewItem(any(), any());
-    }
-
-    @Test
-    @DisplayName("Добавление вещи с невалидными полями")
-    @SneakyThrows
-    void addItem_ItemDtoNotValid_ShouldThrowMethodArgumentNotValidExceptionAndStatus400() {
-        itemDto.setAvailable(null);
-        when(itemService.addNewItem(userId, itemDtoRequest))
-                .thenReturn(itemDto);
-
-        mvc.perform(post("/items")
-                        .header(header, userId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(itemDto)))
-                .andExpect(status().isBadRequest())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
 
         verify(itemService, never()).addNewItem(any(), any());
     }
@@ -440,24 +421,6 @@ class ItemControllerTest {
                         .content(mapper.writeValueAsString(commentDto)))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MissingRequestHeaderException));
-
-        verify(itemService, never()).addComment(any(), any(), any());
-    }
-
-    @Test
-    @DisplayName("Добавление комментария, пустой комментарий")
-    @SneakyThrows
-    void addCommentToItem_AddCommentDtoNotValid_ShouldThrowMethodArgumentNotValidExceptionAndReturnStatus400() {
-        CommentDto commentDto = new CommentDto();
-        when(itemService.addComment(userId, itemId, commentDto))
-                .thenReturn(commentDto);
-
-        mvc.perform(post("/items/{itemId}/comment", itemId)
-                        .header(header, userId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(commentDto)))
-                .andExpect(status().isBadRequest())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
 
         verify(itemService, never()).addComment(any(), any(), any());
     }

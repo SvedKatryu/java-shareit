@@ -83,21 +83,6 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Добавление пользователя без email")
-    @SneakyThrows
-    void addUser_NotValidUser_ShouldThrowMethodArgumentNotValidException() {
-        userDtoRequest.setEmail(null);
-
-        mvc.perform(post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userDtoRequest)))
-                .andExpect(status().isBadRequest())
-                .andExpect(result ->
-                        assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
-        verify(userService, never()).create(userDtoRequest);
-    }
-
-    @Test
     @DisplayName("Обновление данных пользователя")
     @SneakyThrows
     void update_ShouldReturnUserDto() {
